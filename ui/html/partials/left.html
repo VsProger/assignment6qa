@@ -1,0 +1,19 @@
+{{define "leftMenu"}}
+<ul class="menu">
+  <li><a href="/">Home</a></li>
+  {{if .IsAuthenticated}}
+  <li><a href="/post/create">Create post</a></li>
+  {{end}}
+
+  <div class="category">
+    {{ $chosenCategory := .Category}}
+    <label class="category-label">Categories</label>
+    {{range $index, $category := .Categories}} {{if eq $category
+    $chosenCategory}}
+    <p class="chosenCategory">{{$category}}</p>
+    {{else}}
+    <a href="/?category={{toLower $category}}">{{$category}}</a>
+    {{end}} {{end}}
+  </div>
+</ul>
+{{end}}

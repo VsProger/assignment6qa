@@ -1,0 +1,39 @@
+{{define "title"}}Create a Post{{end}} {{define "main"}}
+<form action="/post/create" method="POST">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+  <div class="post-create-title">
+    <label>Title:</label>
+    {{with .Form.FieldErrors.title}}
+    <label class="error">{{.}}</label>
+    {{end}}
+    <input type="text" , name="title" value="{{.Form.Title}}" />
+  </div>
+  <div class="post-create-content">
+    <label>Content:</label>
+    {{with .Form.FieldErrors.content}}
+    <label class="error">{{.}}</label>
+    {{end}}
+    <textarea name="content" class="post-content-input">
+{{.Form.Content}}</textarea
+    >
+  </div>
+  <div class="post-create-category">
+    <label>Category :</label>
+    {{with .Form.FieldErrors.categories}}
+    <label class="error">{{.}}</label>
+    {{end}} {{range $index, $category := .Categories}}
+    <input
+      type="checkbox"
+      name="categories"
+      value="{{$index}}"
+      id="{{$index}}"
+      class="create-categories"
+    />
+    <label for="{{$index}}">{{$category}}</label>
+    {{end}}
+  </div>
+  <div>
+    <input type="submit" value="Publish post" class="post-create-button" />
+  </div>
+</form>
+{{end}}

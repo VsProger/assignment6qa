@@ -1,0 +1,155 @@
+{{define "title"}} {{with .Category}} {{.}} {{else}} {{if eq .URL
+"/user/liked"}} Liked Posts {{else}} {{if eq .URL "/user/posts"}} My Posts
+{{else}} Home {{end}} {{end}} {{end}} {{end}} {{define "main"}} {{$isAuth :=
+.IsAuthenticated}} {{$url := .URL}} {{$limitVariaton := .LimitVariation}}
+<!-- <h2 class="headerPosts">Posts</h2> -->
+<div class="posts-container">
+  {{with .Posts}} {{range .}}
+  <div class="post-card">
+    <div class="card-header">
+      <div class="user-data">
+        <div class="post-card-NameDate">
+          <p class="post-card-Username">By {{.UserName}}</p>
+          <span class="post-card-Date"
+            ><time datetime=""></time>{{humanDate .Created }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="title">
+        <a href="/post/{{.PostID}}" class="titleHome"> {{.Title}} </a>
+      </div>
+      <div class="desc"><pre class="postText_short">{{.Content}}</pre></div>
+    </div>
+    <div class="card-footer">
+        <div>
+      <div class="category-tags-wrapper">
+        {{range $category := .Categories}}
+        <a href="/?category={{toLower $category}}" class="category-footer"
+          ><p class="category-tag">{{$category}}</p></a
+        >
+        {{end}}
+      </div>
+      {{if gt .CommentCount 0}}
+      <a href="/post/{{.PostID}}" class="replyLink"> <div class="replies-container">
+        <img src="/static/img/replies.png" alt="replies-image" class="reactionImg">
+        <p>{{.CommentCount}}</p>
+      </div>
+    </a>
+      {{end}}
+    </div>
+
+      <form action="/post/reaction" method="POST">
+        <input type="hidden" name="postID" value="{{.PostID}}" />
+        <input type="hidden" name="url" value="/" />
+        <div class="postReaction">
+          <div class="reactionContainer">
+            <button
+              class="reactionButton"
+              type="submit"
+              name="reaction"
+              value="true"
+            >
+              <img src="/static/img/like.png" class="reactionImg" />
+              {{if eq .IsLiked 1}}
+              <p class="reactionOn">{{.Like}}</p>
+              {{else}}
+              <p class="reaction">{{.Like}}</p>
+              {{end}}
+            </button>
+          </div>
+          <div class="reactionContainer">
+            <button
+              class="reactionButton"
+              type="submit"
+              name="reaction"
+              value="false"
+            >
+              <img src="/static/img/dislike.png" class="reactionImg" />
+              {{if eq .IsLiked -1}}
+              <p class="reactionOn">{{.Dislike}}</p>
+              {{else}}
+              <p class="reaction">{{.Dislike}}</p>
+              {{end}}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {{end}} {{else}}
+  <div>Nothing here yet! Thats better...</div>
+  {{end}}
+</div>
+
+<div class="pagination">
+  <div class="pages">
+    {{ $currentPage := .CurrentPage }} {{ $limit := .Limit }} {{ $category :=
+    .Category}} {{ if gt $currentPage 1 }} {{with $category}}
+    <a
+      href="?category={{toLower $category}}&page={{sub $currentPage 1}}&limit={{$limit}}"
+      class="previous"
+      >Previous</a
+    >
+    {{else}}
+    <a href="?page={{sub $currentPage 1}}&limit={{$limit}}" class="previous"
+      >Previous</a
+    >
+    {{ end }} {{ end }} {{ range $i := sequence 1 .NumberOfPage }} {{ if eq $i
+    $currentPage }}
+    <span>{{$i}}</span>
+    {{ else }} {{with $category}}
+    <a href="?inputcategory={{toLower $category}}&page={{$i}}&limit={{$limit}}"
+      >{{$i}}</a
+    >
+    {{else}}
+    <a href="?page={{$i}}&limit={{$limit}}">{{$i}}</a>
+    {{end}} {{end}} {{ end }} {{ if lt $currentPage .NumberOfPage }} {{with
+    $category}}
+    <a
+      href="?category={{toLower $category}}&page={{add $currentPage 1}}&limit={{$limit}}"
+      class="next"
+      >Next</a
+    >
+    {{else}}
+    <a href="?page={{add $currentPage 1}}&limit={{$limit}}" class="next"
+      >Next</a
+    >
+    {{end}} {{ end }}
+  </div>
+  <input type="hidden" id="category" name="category" value="{{$category}}" />
+  {{with $category}}
+  <form action="?category={{$category}}&page=1" class="ppp">
+    <input
+      type="hidden"
+      id="category"
+      name="category"
+      value="{{toLower $category}}"
+    />
+    <label for="limit" class="label-pages">posts per page: </label>
+    <select id="limit" name="limit">
+      {{range $limitVariaton}} {{if eq . $limit}}
+      <option value="{{.}}" selected>{{.}}</option>
+      {{else}}
+      <option value="{{.}}">{{.}}</option>
+      {{end}} {{end}}
+    </select>
+    <input type="submit" value="ok" class="button-pages" />
+  </form>
+  {{else}}
+  <form action="{{toLower $url}}">
+    <label for="limit" class="label-pages">posts per page: </label>
+    <select id="limit" name="limit">
+      {{range $limitVariaton}} {{if eq . $limit}}
+      <option value="{{.}}" selected>{{.}}</option>
+      {{else}}
+      <option value="{{.}}">{{.}}</option>
+      {{end}} {{end}}
+      
+    </select>
+    <input type="submit" value="ok" class="button-pages" />
+  </form>
+  {{end}}
+</div>
+{{end}}

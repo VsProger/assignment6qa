@@ -1,0 +1,38 @@
+{{define "rightMenu"}}
+
+<div>
+  <ul class="menu">
+    {{if .IsAuthenticated}}
+    <div class="user-card">
+      <div class="user-name">
+        {{.User.Name}} {{if eq .User.ID 1}}
+        <p>лох</p>
+      </div>
+
+      {{end}}
+      <ul class="user-menu">
+        {{if eq .URL "/user/posts"}}
+        <li class="chosenCategory">My Posts</li>
+        {{else}}
+        <li><a href="/user/posts">My Posts</a></li>
+        {{end}} {{if eq .URL "/user/liked"}}
+        <li class="chosenCategory">Liked Posts</li>
+        {{else}}
+        <li><a href="/user/liked">Liked Posts</a></li>
+        {{end}}
+        <li class="logoutButton">
+          <form action="/logout" method="POST">
+            <!-- <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'> -->
+            <a><button>Logout</button></a>
+          </form>
+        </li>
+      </ul>
+    </div>
+    {{else}}
+    <li><a href="/signup">Signup</a></li>
+    <li><a href="/login">Login</a></li>
+    {{end}}
+  </ul>
+</div>
+
+{{end}}

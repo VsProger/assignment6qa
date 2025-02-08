@@ -1,0 +1,132 @@
+{{define "title"}}Post #{{.Post.PostID}}{{end}} {{define "main"}}
+<div class="snippet">
+  <div class="metadata">
+    <strong class="postTitle">{{.Post.Title}}</strong>
+    <div class="namedate">
+      <pre class="post-card-Username-post">By {{.Post.UserName}} on </pre>
+      <span class="post-card-Date-post"
+        ><time datetime=""></time>{{humanDate .Post.Created }}</span
+      >
+    </div>
+  </div>
+  <div class="snippetText"><pre class="postText">{{.Post.Content}}</pre></div>
+  <div class="post-footer">
+    <div class="postCategory">
+      {{range $category := .Post.Categories}}
+      <a href="/?category={{toLower $category}}" class="category-footer"
+        ><p class="categoryFooter">{{$category}}</p></a
+      >
+      {{end}}
+    </div>
+    <form action="/post/reaction" method="POST">
+      <input type="hidden" name="postID" value="{{.Post.PostID}}" />
+      <input type="hidden" name="url" value="/post/{{.Post.PostID}}" />
+      <div class="postReaction">
+        <div class="reactionContainer">
+          <button
+            type="submit"
+            class="reactionButton"
+            name="reaction"
+            value="true"
+          >
+            <img src="/static/img/like.png" class="reactionImg" />
+            {{if eq .Post.IsLiked 1}}
+            <p class="reactionOn">{{.Post.Like}}</p>
+            {{else}}
+            <p class="reaction">{{.Post.Like}}</p>
+            {{end}}
+          </button>
+        </div>
+        <div class="reactionContainer">
+          <button
+            type="submit"
+            class="reactionButton"
+            name="reaction"
+            value="false"
+          >
+            <img src="/static/img/dislike.png" class="reactionImg" />
+            {{if eq .Post.IsLiked -1}}
+            <p class="reactionOn">{{.Post.Dislike}}</p>
+            {{else}}
+            <p class="reaction">{{.Post.Dislike}}</p>
+            {{end}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="new-comment">
+  <form action="/comment/post" method="POST" class="comment-form">
+    {{with .Form.FieldErrors.comment}}
+    <label class="error">{{.}}</label>
+    {{end}}
+    <div class="comment-input">
+      <input
+        type="text"
+        name="comment"
+        placeholder="No one wants your comment"
+        class="newcominput"
+      />
+      <input type="submit" value="Comment" class="comment-submit" />
+      <input type="hidden" name="postID" value="{{.Post.PostID}}" />
+    </div>
+  </form>
+</div>
+{{with .Post.Comment}}
+<h2 class="commenth2">Comments</h2>
+<div class="comment-container">
+  {{range .}}
+  <div class="comment">
+    <div class="comment-left">
+      <div class="comment-metadata">
+        <pre class="comment-Username">By {{.UserName}} on </pre>
+        <span>{{humanDate .Created}}</span>
+      </div>
+      <div class="comment-body">
+        <code>{{.Content}}</code>
+      </div>
+    </div>
+    <form action="/comment/reaction" method="POST" class="reactionForm">
+      <input type="hidden" name="commentID" value="{{.CommentID}}" />
+      <input type="hidden" name="postID" value="{{.PostID}}" />
+      <!-- here comment id -->
+      <div class="postReaction">
+        <div class="reactionContainer">
+          <button
+            class="reactionButton"
+            type="submit"
+            name="reaction"
+            value="true"
+          >
+            <img src="/static/img/like.png" class="reactionImg" />
+            {{if eq .IsLiked 1}}
+            <p class="reactionOn">{{.Like}}</p>
+            {{else}}
+            <p class="reaction">{{.Like}}</p>
+            {{end}}
+          </button>
+        </div>
+        <div class="reactionContainer">
+          <button
+            class="reactionButton"
+            type="submit"
+            name="reaction"
+            value="false"
+          >
+            <img src="/static/img/dislike.png" class="reactionImg" />
+            {{if eq .IsLiked -1}}
+            <p class="reactionOn">{{.Dislike}}</p>
+            {{else}}
+            <p class="reaction">{{.Dislike}}</p>
+            {{end}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {{end}}
+</div>
+{{end}} {{end}}
+
+<!-- <input type="hidden" name="commentID" value="{{.Comment.CommentID}}"> -->

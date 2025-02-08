@@ -1,0 +1,47 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{template "title" .}} - Forum</title>
+    <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
+    <link
+      rel="shortcut icon"
+      href="/static/img/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Honk&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="/" class="honk-kek"
+        ><img src="/static/img/logo.png" alt="logo" class="logo-img"
+      /></a>
+    </header>
+    <div class="body">
+      <div class="left">{{template "leftMenu" .}}</div>
+      <div class="middle">
+        <main>
+          {{with .Flash}}
+          <div class="flash">{{.}}</div>
+          {{end}} {{template "main" .}}
+        </main>
+      </div>
+      <div class="right">{{template "rightMenu" .}}</div>
+    </div>
+
+    <footer>
+     {{.Quote}} © <a href="https://www.instagram.com/jasonstatham/">Jason Statham</a>
+    </footer>
+  </body>
+</html>
+{{end}}
